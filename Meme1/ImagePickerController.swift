@@ -29,7 +29,7 @@ class ImagePickerController: UIViewController, UIImagePickerControllerDelegate, 
         NSAttributedStringKey.strokeColor.rawValue: UIColor.black,
         NSAttributedStringKey.foregroundColor.rawValue: UIColor.white,
         NSAttributedStringKey.font.rawValue: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
-        NSAttributedStringKey.strokeWidth.rawValue: -1.0]
+        NSAttributedStringKey.strokeWidth.rawValue: -3.5]
     
     private func setupTextField(_ field: UITextField) {
         field.defaultTextAttributes = memeTextAttributes
@@ -114,24 +114,24 @@ class ImagePickerController: UIViewController, UIImagePickerControllerDelegate, 
     }
 
     func subscribeToKeyboardNotifications() {
-        print("subscribing to keyboard notifications")
+        debugPrint("subscribing to keyboard notifications")
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: .UIKeyboardWillHide, object: nil)
     }
     
     func unsubscribeFromKeyboardNotifications() {
-        print("UNsubscribing to keyboard notifications")
+        debugPrint("UNsubscribing to keyboard notifications")
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        print("canceled image picker!")
+        debugPrint("canceled image picker!")
         dismiss(animated: true, completion: nil)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        print("picked an image \(info["UIImagePickerControllerOriginalImage"])")
+        debugPrint("picked an image \(info["UIImagePickerControllerOriginalImage"])")
         if let image = info["UIImagePickerControllerOriginalImage"] as? UIImage {
             imagePickerView.image = image
         }
@@ -155,7 +155,7 @@ class ImagePickerController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     private func completeHandler(activity: UIActivityType?, completed: Bool, returnedItems: [Any]?, activityError: Error?) -> Void {
-        print("calling to complete handler!! activity \(activity) completed: \(completed) returnedItems \(returnedItems)")
+        debugPrint("calling to complete handler!! activity \(activity) completed: \(completed) returnedItems \(returnedItems)")
         if (completed) {
             save()
         }

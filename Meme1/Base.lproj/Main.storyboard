@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="my2-ri-W8b">
-                                <rect key="frame" x="10" y="64" width="355" height="559"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="559"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B8W-6p-gzQ">
@@ -84,10 +84,10 @@
                             <constraint firstItem="yic-JO-U7w" firstAttribute="bottom" secondItem="my2-ri-W8b" secondAttribute="bottom" constant="-20" id="CT6-Ne-ehy"/>
                             <constraint firstItem="B8W-6p-gzQ" firstAttribute="top" secondItem="my2-ri-W8b" secondAttribute="bottom" id="CqX-PS-AQ3"/>
                             <constraint firstItem="2v0-7W-SM4" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="F8w-K5-fTh"/>
-                            <constraint firstItem="my2-ri-W8b" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" constant="-10" id="O0s-Wz-LuZ"/>
+                            <constraint firstItem="my2-ri-W8b" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="O0s-Wz-LuZ"/>
                             <constraint firstItem="B8W-6p-gzQ" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="UjF-0s-noJ"/>
                             <constraint firstItem="IUM-mN-6rM" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="VAN-Gx-PC3"/>
-                            <constraint firstItem="my2-ri-W8b" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="Wlg-uQ-vjX"/>
+                            <constraint firstItem="my2-ri-W8b" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Wlg-uQ-vjX"/>
                             <constraint firstItem="IUM-mN-6rM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="cJL-EO-pV7"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="yic-JO-U7w" secondAttribute="trailing" constant="20" id="cYI-X1-Gya"/>
                             <constraint firstItem="my2-ri-W8b" firstAttribute="top" secondItem="IUM-mN-6rM" secondAttribute="bottom" id="eba-wY-N9u"/>
