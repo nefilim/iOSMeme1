@@ -8,14 +8,22 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class ImagePickerController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var imagePickerView: UIImageView!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
-    @IBOutlet weak var shareButton: UIButton!
     
     @IBOutlet weak var topTextField: UITextField!
     @IBOutlet weak var bottomTextField: UITextField!
+    
+    @IBOutlet weak var toolbar: UIToolbar!
+    
+    @IBOutlet weak var navigationBar: UINavigationBar!
+    
+    @IBOutlet weak var shareButton: UIBarButtonItem!
+    @IBOutlet weak var cancelButton: UIBarButtonItem!
+    
+    let memeTextFieldDelegate = MemeTextFieldDelegate()
     
     let memeTextAttributes:[String: Any] = [
         NSAttributedStringKey.strokeColor.rawValue: UIColor.black,
@@ -23,33 +31,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         NSAttributedStringKey.font.rawValue: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
         NSAttributedStringKey.strokeWidth.rawValue: -1.0]
     
-    let TopTextFieldTag = 1
-    let BottomTextFieldTag = 2
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        if let text = textField.text {
-            // TODO not great
-            if (TopTextFieldTag == textField.tag && "TOP" == text) || (BottomTextFieldTag == textField.tag && "BOTTOM" == text) {
-                print("clearing default text")
-                textField.text = ""
-            } else {
-                print("NOT clearing non default text")
-            }
-        }
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-    
     private func setupTextField(_ field: UITextField) {
         field.defaultTextAttributes = memeTextAttributes
         field.textAlignment = .center
         field.backgroundColor = UIColor.clear.withAlphaComponent(0.0)
         field.borderStyle = .none
         field.autocapitalizationType = .allCharacters
-        field.delegate = self
+        field.delegate = memeTextFieldDelegate
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -74,20 +62,27 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         bottomTextField.text = "BOTTOM"
         setupTextField(bottomTextField)
         
+        setButtonStates()
+    }
+    
+    private func setButtonStates() {
         shareButton.isEnabled = imagePickerView.image != nil
+        cancelButton.isEnabled = imagePickerView.image != nil
+    }
+    
+    private func hideNavAndToolbars(_ hide: Bool) {
+        toolbar.isHidden = hide
+        navigationBar.isHidden = hide
     }
     
     func compositeMemedImage() -> UIImage {
-        
-        // TODO: hide toolbar and navbar
-        
+        hideNavAndToolbars(true)
         UIGraphicsBeginImageContext(self.view.frame.size)
         view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
         let compositedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
-        // TODO: show toolbar and navbar
-        
+        hideNavAndToolbars(false)
+
         return compositedImage
     }
     
@@ -107,12 +102,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @objc func keyboardWillShow(_ notification: Notification) {
-        print("got keyboard notification \(notification.description)")
-        view.frame.origin.y = -getKeyboardHeight(notification)
+        if (bottomTextField.isFirstResponder) {
+            view.frame.origin.y = -getKeyboardHeight(notification)
+        }
     }
     
     @objc func keyboardWillHide(_ notification: Notification) {
-        view.frame.origin.y = 0
+        if (bottomTextField.isFirstResponder) {
+            view.frame.origin.y = 0
+        }
     }
 
     func subscribeToKeyboardNotifications() {
@@ -136,23 +134,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         print("picked an image \(info["UIImagePickerControllerOriginalImage"])")
         if let image = info["UIImagePickerControllerOriginalImage"] as? UIImage {
             imagePickerView.image = image
-            shareButton.isEnabled = true
-        } else {
-            shareButton.isEnabled = false
         }
+        setButtonStates()
         dismiss(animated: true, completion: nil)
     }
+    
     @IBAction func pickImageFromCamera(_ sender: Any) {
-        let pickerController = UIImagePickerController()
-        pickerController.delegate = self
-        pickerController.sourceType = .camera
-        present(pickerController, animated: true, completion: nil)
+        presentImagePickerController(UIImagePickerControllerSourceType.camera)
     }
     
     @IBAction func pickImageFromAlbum(_ sender: Any) {
+        presentImagePickerController(UIImagePickerControllerSourceType.photoLibrary)
+    }
+    
+    private func presentImagePickerController(_ source: UIImagePickerControllerSourceType) {
         let pickerController = UIImagePickerController()
         pickerController.delegate = self
-        pickerController.sourceType = .photoLibrary
+        pickerController.sourceType = source
         present(pickerController, animated: true, completion: nil)
     }
     
@@ -168,6 +166,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let activityViewController = UIActivityViewController(activityItems: [meme.compositedImage!], applicationActivities: nil)
         activityViewController.completionWithItemsHandler = completeHandler
         present(activityViewController, animated: true, completion: nil)
+    }
+    
+    @IBAction func cancel(_ sender: Any) {
+        imagePickerView.image = nil;
+        topTextField.text = "TOP"
+        bottomTextField.text = "BOTTOM"
+        setButtonStates()
     }
 }
 
